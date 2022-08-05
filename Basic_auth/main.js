@@ -1,12 +1,23 @@
 const express = require("express");
-const http = require("http");
 var path = require('path');
 const fs = require("fs");
 const ejs = require('ejs');
 
+const app = express();
 const PORT = 3000;
 
-http.createServer(function (request, response) {
+const testac = {
+    'user_admin': { password: '7Vussa' },
+  };
+// ミドルウェアの定義
+var Basic_Auth = function(req, res, next){
+    
+    next();
+}
+
+// 下記の部分でサーバー自体の処理を書いてる
+app.use('/', Basic_Auth);
+app.get('/', (request, response) => {
     console.log('request ', request.url);
 
     var filePath = '.' + request.url;
@@ -53,7 +64,8 @@ http.createServer(function (request, response) {
             response.end(content, 'utf-8');
         }
     });
+})
 
-}).listen(PORT);
+app.listen(PORT)
 
-console.log(PORT +"のサーバーを起動しました。")
+console.log(PORT +"のサーバーを起動しました。");
