@@ -1,3 +1,4 @@
+//没
 const express = require("express");
 var path = require('path');
 const fs = require("fs");
@@ -8,32 +9,39 @@ const PORT = 3000;
 
 const testac = {
     'user': 'admin',  
-    'password' : '7Vussa' ,
+    'pass' : '7Vussa' ,
   };
 // ミドルウェアの定義
-var Basic_Auth = function(req, res, next){
-    console.log(req.query.username)
-    console.log(req.query.pass)
-    var inName = req.query.username;
-    var inPass = req.query.pass; 
-    // localhost:3000?username=user_admin?pass=7Vussa
-    if(inName === testac['user'] && inPass === testac['password']){
-        next()
-    }else{
-            
-    }
-}
 
+app.use(function(req, res, next){
+    // if(req.url.startsWith('/')){
+
+    // }
+    var inName = String(req.query.user);
+    var inPass = String(req.query.pass); 
+    console.log(inName,inPass);
+    
+    if((testac.user == inName) && (testac.pass == inPass)){
+        res.redirect('./');
+        console.log("BasicAuth完了")
+    }
+    
+    if((testac.user == inName) != (testac.pass == inPass)){
+        fs.readFile('./authErro.html', function(error, content) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end(content, 'utf-8');
+        });
+    }
+});
 // 下記の部分でサーバー自体の処理を書いてる
-app.use('/', Basic_Auth);//ミドルウェアの関数においてはここに追記することが可能
-app.get('/', (request, response) => {
-    console.log('request', request.url);
-
-    var filePath = '.' + request.url;
-    if (filePath == './') {
-        filePath = 'index.html';
+//ミドルウェアの関数においてはここに追記することが可能
+app.get('/', (req, res) => {
+    console.log(filePath)
+    if(filePath == './'){
+        filePath = 'index.html'
+        console.log(filePath)
     }
-
+    
     var extname = String(path.extname(filePath)).toLowerCase();
     var mimeTypes = {
         '.html': 'text/html',
@@ -57,20 +65,20 @@ app.get('/', (request, response) => {
 
     fs.readFile(filePath, function(error, content) {
         if (error) {
-            if(error.code == 'ENOENT') {
+            if(error.code == 'ENOENT' || error.code == 'ERR_HTTP_HEADERS_SENT') {
                 fs.readFile('./404.html', function(error, content) {
-                    response.writeHead(404, { 'Content-Type': 'text/html' });
-                    response.end(content, 'utf-8');
+                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.end(content, 'utf-8');
                 });
             }
             else {
-                response.writeHead(500);
-                response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+                res.writeHead(500);
+                res.end('Sorry,ERRCODE this ->'+error.code+' ..\n');
             }
         }
         else {
-            response.writeHead(200, { 'Content-Type': contentType });
-            response.end(content, 'utf-8');
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(content, 'utf-8');
         }
     });
 })
