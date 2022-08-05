@@ -7,18 +7,27 @@ const app = express();
 const PORT = 3000;
 
 const testac = {
-    'user_admin': { password: '7Vussa' },
+    'user': 'admin',  
+    'password' : '7Vussa' ,
   };
 // ミドルウェアの定義
 var Basic_Auth = function(req, res, next){
-    
-    next();
+    console.log(req.query.username)
+    console.log(req.query.pass)
+    var inName = req.query.username;
+    var inPass = req.query.pass; 
+    // localhost:3000?username=user_admin?pass=7Vussa
+    if(inName === testac['user'] && inPass === testac['password']){
+        next()
+    }else{
+            
+    }
 }
 
 // 下記の部分でサーバー自体の処理を書いてる
-app.use('/', Basic_Auth);
+app.use('/', Basic_Auth);//ミドルウェアの関数においてはここに追記することが可能
 app.get('/', (request, response) => {
-    console.log('request ', request.url);
+    console.log('request', request.url);
 
     var filePath = '.' + request.url;
     if (filePath == './') {
