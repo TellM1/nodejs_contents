@@ -14,9 +14,6 @@ const testac = {
 // ミドルウェアの定義
 
 app.use(function(req, res, next){
-    // if(req.url.startsWith('/')){
-
-    // }
     var inName = String(req.query.user);
     var inPass = String(req.query.pass); 
     console.log(inName,inPass);
@@ -33,6 +30,7 @@ app.use(function(req, res, next){
         });
     }
 });
+
 // 下記の部分でサーバー自体の処理を書いてる
 //ミドルウェアの関数においてはここに追記することが可能
 app.get('/', (req, res) => {

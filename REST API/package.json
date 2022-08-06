@@ -1,0 +1,15 @@
+{
+  "name": "rest-api",
+  "version": "1.0.0",
+  "description": "1. CREATE ---新しいデータを作成する操作\r 2. READ ---データを読んでゲットする操作\r 3. UPDATE ---変更したいデータがあれば、この操作はデータをゲットし変更する操作\r 4. DELETE ---データを消す操作",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
